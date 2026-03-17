@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Path Verification Test</title>
+  <style>
+    body {
+      font-family: monospace;
+      background: #1a1a1a;
+      color: #00ff00;
+      padding: 20px;
+      line-height: 1.8;
+    }
+    .ok { color: #00ff00; }
+    .fail { color: #ff0000; }
+    pre { background: #0a0a0a; padding: 10px; border: 1px solid #333; }
+  </style>
+</head>
+<body>
+  <h2>🔍 Path and Resource Verification</h2>
+  <div id="results"></div>
+
+  <script>
+    const results = document.getElementById('results');
+    
+    function log(msg, ok) {
+      const line = document.createElement('div');
+      line.className = ok ? 'ok' : 'fail';
+      line.textContent = (ok ? '✅' : '❌') + ' ' + msg;
+      results.appendChild(line);
+      console.log(line.textContent);
+    }
+
+    // Check paths
+    log('Current location: ' + window.location.href, true);
+    log('Base URL: ' + window.location.origin, true);
+    
+    // Test CSS files
+    const cssFiles = [
+      './css/style.css',
+      './css/animations.css',
+      './css/game.css'
+    ];
+    
+    cssFiles.forEach(file => {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = file;
+      link.onload = () => log('CSS loaded: ' + file, true);
+      link.onerror = () => log('CSS FAILED: ' + file, false);
+      document.head.appendChild(link);
+    });
+
+    // Test JS file access
+    setTimeout(() => {
+      fetch('./js/game.js')
+        .then(r => {
+          if (r.ok) {
+            log('JS file accessible: ./js/game.js', true);
+            return r.text();
+          } else {
+            log('JS file NOT accessible: ./js/game.js (' + r.status + ')', false);
+          }
+        })
+        .then(text => {
+          if (text) {
+            log('JS file size: ' + text.length + ' bytes', true);
+            if (text.includes('initGame')) {
+              log('JS contains initGame function', true);
+            } else {
+              log('JS missing initGame function', false);
+            }
+          }
+        })
+        .catch(e => log('Fetch error: ' + e.message, false));
+    }, 500);
+
+    log('Page structure: DOM is ready', true);
+  </script>
+</body>
+</html>

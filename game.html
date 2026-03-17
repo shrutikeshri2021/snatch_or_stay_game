@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZK Snitch or Stay — Interrogation</title>
+  
+  <!-- ORIGIN FIX: Redirect 127.0.0.1 to localhost for consistent localStorage & cookies -->
+  <script>
+    if (window.location.hostname === '127.0.0.1') {
+      const newUrl = window.location.href.replace('127.0.0.1', 'localhost');
+      console.log('🔄 Redirecting from 127.0.0.1 to localhost for cross-origin fix...');
+      window.location.href = newUrl;
+    }
+  </script>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Styles — order matters -->
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/animations.css">
+  <link rel="stylesheet" href="./css/game.css">
+</head>
+<body class="game-room">
+  <!-- Reveal Overlay -->
+  <div class="reveal-overlay" id="revealOverlay">
+    <div class="reveal-text" id="revealText">THE DETECTIVE HAS THE RESULTS...</div>
+    <div class="choices-reveal" id="choicesReveal"></div>
+    <div class="outcome-text" id="outcomeText"></div>
+    <div class="points-display" id="pointsDisplay"></div>
+  </div>
+
+  <!-- TOP BAR -->
+  <div id="topBar">
+    <div class="top-left">
+      <div class="top-left-main">
+        <span class="persona-emoji" id="topPersonaEmoji">🧠</span>
+        <span class="persona-name" id="topPersonaName">THE MASTERMIND</span>
+      </div>
+      <div class="trust-level">TRUST LEVEL: <span id="trustLevel">SECURE</span></div>
+    </div>
+
+    <div class="top-center">
+      <div class="round-display" id="roundDisplay">ROUND 1</div>
+      <div class="round-subtitle">BEST OF 10</div>
+    </div>
+
+    <div class="top-right">
+      <div class="top-right-main">
+        <span class="vs-divider">VS</span>
+        <span class="opponent-name" id="opponentName">SCANNING...</span>
+        <span class="cursor-blink"></span>
+      </div>
+      <div class="threat-level">
+        THREAT LEVEL: <span class="threat-emojis" id="threatEmojis">☠️☠️☠️</span>
+      </div>
+      
+      <!-- Hidden alias for game.js compatibility -->
+      <span id="topOpponentName" style="display:none;">SCANNING...</span>
+    </div>
+  </div>
+
+  <!-- MIDDLE SECTION -->
+  <div id="middleSection">
+    <!-- LEFT PANEL: PLAYER -->
+    <div id="leftPanel">
+      <div class="panel-label">YOU</div>
+      
+      <div class="avatar-card">
+        <span class="avatar-emoji" id="avatarEmojiLeft">🧠</span>
+        <div class="avatar-name" id="avatarNameLeft">THE MASTERMIND</div>
+      </div>
+
+      <div class="session-stats">
+        <div class="stat-label">THIS SESSION</div>
+        <div class="stat-row">
+          <div class="stat-dot wins"></div>
+          <span class="stat-text">WINS</span>
+          <span class="stat-value wins" id="statWins">0</span>
+        </div>
+        <div class="stat-row">
+          <div class="stat-dot losses"></div>
+          <span class="stat-text">LOSSES</span>
+          <span class="stat-value losses" id="statLosses">0</span>
+        </div>
+        <div class="stat-row">
+          <div class="stat-dot betrayals"></div>
+          <span class="stat-text">BETRAYALS</span>
+          <span class="stat-value betrayals" id="statBetrayals">0</span>
+        </div>
+      </div>
+
+      <div class="score-display">
+        <div class="score-label">SCORE</div>
+        <div class="score-number" id="playerScore">0</div>
+      </div>
+      
+      <!-- Hidden aliases for game.js compatibility -->
+      <span id="playerWins" style="display:none;">0</span>
+      <span id="playerLosses" style="display:none;">0</span>
+      <span id="playerBetrayals" style="display:none;">0</span>
+    </div>
+
+    <!-- CENTER ARENA -->
+    <div id="centerArena">
+      <!-- Interrogation Visual -->
+      <div id="interrogationVisual">
+        <div class="lightbulb"></div>
+        <div class="light-cone"></div>
+        <div class="interrogation-figures">
+          <div class="figure">
+            <div class="figure-head"></div>
+            <div class="figure-body"></div>
+            <div class="figure-emoji" id="figurePlayerEmoji">🧠</div>
+          </div>
+          <div class="table">
+            <div class="table-top"></div>
+            <div class="table-leg"></div>
+          </div>
+          <div class="figure">
+            <div class="figure-head"></div>
+            <div class="figure-body"></div>
+            <div class="figure-emoji" id="figureOpponentEmoji">???</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timer -->
+      <div id="timerContainer">
+        <svg class="timer-svg" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="85" 
+            fill="none" stroke="#1a0000" stroke-width="8"/>
+          <circle cx="100" cy="100" r="85" 
+            fill="none" stroke="#e60000" stroke-width="8"
+            stroke-dasharray="534" stroke-dashoffset="0"
+            stroke-linecap="round"
+            transform="rotate(-90 100 100)"
+            id="timerArc"/>
+          <circle cx="100" cy="100" r="70" 
+            fill="rgba(20,0,0,0.8)"/>
+          <text x="100" y="95" text-anchor="middle" 
+            font-family="Bebas Neue" font-size="52" 
+            fill="white" id="timerNumber">30</text>
+          <text x="100" y="118" text-anchor="middle"
+            font-family="Courier Prime" font-size="11"
+            fill="#666" letter-spacing="3">SECONDS</text>
+          <text x="100" y="140" text-anchor="middle"
+            font-family="Bebas Neue" font-size="14"
+            fill="#e60000" id="paranoiaText">CHOOSE NOW</text>
+        </svg>
+      </div>
+
+      <!-- Choices -->
+      <div id="choicesContainer">
+        <div class="taunt-section">
+          <label class="taunt-label">SEND A TAUNT:</label>
+          <div class="taunt-buttons">
+            <button class="taunt-btn" data-taunt="I already snitched.">😈 SNITCHED</button>
+            <button class="taunt-btn" data-taunt="Trust me bro.">🤝 TRUST ME</button>
+            <button class="taunt-btn" data-taunt="You're on your own.">💀 ON YOUR OWN</button>
+            <button class="taunt-btn" data-taunt="Let's both walk free.">🕊️ WALK FREE</button>
+          </div>
+        </div>
+
+        <div class="choice-buttons">
+          <button class="choice-btn stay-btn" id="stayBtn">
+            <span class="choice-btn-emoji">🤫</span>
+            <span class="choice-btn-text">STAY LOYAL</span>
+            <span class="choice-btn-shortcut">[S]</span>
+          </button>
+          <span class="vs-text">VS</span>
+          <button class="choice-btn snitch-btn" id="snitchBtn">
+            <span class="choice-btn-emoji">🗣️</span>
+            <span class="choice-btn-text">SNITCH</span>
+            <span class="choice-btn-shortcut">[N]</span>
+          </button>
+        </div>
+
+        <div class="waiting-text" id="waitingText">⏳ WAITING FOR OPPONENT...</div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: OPPONENT -->
+    <div id="rightPanel">
+      <div class="panel-label">OPPONENT</div>
+      
+      <div class="opponent-avatar-card">
+        <div class="opponent-head"></div>
+        <div class="opponent-name-card" id="opponentNameCard">SCANNING...</div>
+      </div>
+
+      <div class="threat-metrics">
+        <div class="metric-label">THREAT ANALYSIS</div>
+        <div class="metric-row">
+          <div class="metric-name">
+            <span class="metric-name-text">AGGRESSION</span>
+            <span class="metric-value" id="metricAgg">72%</span>
+          </div>
+          <div class="metric-bar-bg">
+            <div class="metric-bar-fill" style="width: 72%;"></div>
+          </div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-name">
+            <span class="metric-name-text">LOYALTY</span>
+            <span class="metric-value" id="metricLoy">31%</span>
+          </div>
+          <div class="metric-bar-bg">
+            <div class="metric-bar-fill" style="width: 31%;"></div>
+          </div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-name">
+            <span class="metric-name-text">DECEPTION</span>
+            <span class="metric-value" id="metricDec">68%</span>
+          </div>
+          <div class="metric-bar-bg">
+            <div class="metric-bar-fill" style="width: 68%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="score-display">
+        <div class="score-label">SCORE</div>
+        <div class="score-number" id="opponentScore">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div id="bottomBar">
+    <div class="bottom-left">
+      <span class="status-dot"></span>
+      <span id="proofStatus">● SESSION MONITORED — zkVerify PROOF PENDING</span>
+    </div>
+    <div class="bottom-center">
+      SECURE TUNNEL: ████████████ <span id="tunnelStatus">ESTABLISHED</span>
+    </div>
+    <div class="bottom-right">
+      SESSION ID: <span id="sessionId">ZK-0000-0000</span>
+    </div>
+  </div>
+
+  <!-- Background canvases — MUST have pointer-events none -->
+  <canvas id="rainCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
+  <canvas id="emberCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
+  <div id="lightning" style="position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0;"></div>
+  <div id="scanlines" style="position:fixed;inset:0;pointer-events:none;z-index:2;"></div>
+  <div id="vignette" style="position:fixed;inset:0;pointer-events:none;z-index:2;"></div>
+
+  <!-- Scripts — order matters -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <script src="./js/game.js"></script>
+</body>
+</html>
