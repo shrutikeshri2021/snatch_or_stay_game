@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initParticles();
   initCounters();
   initEnterButton();
+  initPersonaSelection();
 });
 
 function initFeedClock() {
@@ -129,7 +130,90 @@ function initEnterButton() {
     flash.classList.add("flash-active");
 
     setTimeout(() => {
-      window.location.href = "persona-selection.html";
+      document.body.classList.add("persona-mode");
     }, 430);
   });
+}
+
+function initPersonaSelection() {
+  const cards = document.querySelectorAll(".persona-card");
+  const confirmBtn = document.getElementById("confirmBtn");
+  const countdownText = document.getElementById("countdownText");
+  const redFlash = document.getElementById("redFlashOverlay");
+
+  if (!cards.length || !confirmBtn || !countdownText || !redFlash) return;
+
+  let selectedCard = null;
+  let locking = false;
+
+  const stampSound = new Howl({
+    src: [
+      "data:audio/wav;base64,UklGRmQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUAAAAAAAP8A/wD/AP8A/wD/AP8A/wD/AAAAAP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/"
+    ],
+    volume: 0.42,
+    rate: 0.65,
+    preload: true
+  });
+
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      if (locking || !document.body.classList.contains("persona-mode")) return;
+
+      cards.forEach((item) => item.classList.remove("selected"));
+      card.classList.add("selected");
+      selectedCard = card;
+      confirmBtn.disabled = false;
+      countdownText.textContent = "";
+    });
+  });
+
+  confirmBtn.addEventListener("click", () => {
+    if (!selectedCard || locking) return;
+
+    locking = true;
+    confirmBtn.disabled = true;
+
+    const personaData = {
+      name: selectedCard.dataset.name,
+      loyalty: Number(selectedCard.dataset.loyalty),
+      danger: Number(selectedCard.dataset.danger)
+    };
+
+    localStorage.setItem("zkSelectedPersona", JSON.stringify(personaData));
+    localStorage.setItem("zkPersonaName", personaData.name);
+    localStorage.setItem("zkPersonaLoyalty", String(personaData.loyalty));
+    localStorage.setItem("zkPersonaDanger", String(personaData.danger));
+
+    console.log("Selected persona:", personaData);
+
+    startCountdown(countdownText, () => {
+      stampSound.play();
+      document.body.classList.add("transitioning");
+      redFlash.classList.remove("flash-on");
+      void redFlash.offsetWidth;
+      redFlash.classList.add("flash-on");
+
+      setTimeout(() => {
+        window.location.href = "game.html";
+      }, 900);
+    });
+  });
+}
+
+function startCountdown(element, onDone) {
+  let count = 3;
+  element.textContent = `IDENTITY LOCKED IN ${count}...`;
+
+  const timer = setInterval(() => {
+    count -= 1;
+
+    if (count > 0) {
+      element.textContent = `IDENTITY LOCKED IN ${count}...`;
+      return;
+    }
+
+    clearInterval(timer);
+    element.textContent = "IDENTITY CONFIRMED";
+    onDone();
+  }, 1000);
 }

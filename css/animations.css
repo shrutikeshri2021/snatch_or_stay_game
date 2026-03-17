@@ -111,3 +111,32 @@
   25% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+@keyframes fadeCardIn {
+  0% { opacity: 0; transform: translateY(14px) scale(0.99); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes cardBreath {
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 0, 0, 0.06); }
+  50% { box-shadow: 0 0 14px rgba(170, 0, 0, 0.12); }
+}
+
+@keyframes selectedPulse {
+  0%, 100% { box-shadow: 0 0 18px rgba(255, 0, 0, 0.45), inset 0 0 10px rgba(255, 0, 0, 0.14); }
+  50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.75), inset 0 0 16px rgba(255, 0, 0, 0.2); }
+}
+
+@keyframes staticJitter {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-1px, 1px); }
+  50% { transform: translate(1px, -1px); }
+  75% { transform: translate(-1px, -1px); }
+  100% { transform: translate(1px, 1px); }
+}
+
+@keyframes redFlashIn {
+  0% { opacity: 0; }
+  30% { opacity: 0.85; }
+  100% { opacity: 0; }
+}

@@ -31,7 +31,9 @@ body {
 #particles-bg,
 .scanlines,
 .vignette,
-.flash-overlay {
+.flash-overlay,
+.red-flash-overlay,
+.static-overlay {
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -65,6 +67,22 @@ body {
   background: #fff;
   opacity: 0;
   will-change: opacity;
+}
+
+.red-flash-overlay {
+  z-index: 98;
+  background: #ff0000;
+  opacity: 0;
+}
+
+.static-overlay {
+  z-index: 97;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 2px);
+  background-size: 100% 4px, 3px 100%;
 }
 
 .corner {
@@ -241,6 +259,191 @@ body {
   padding: 0 0.5rem;
 }
 
+.persona-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  padding: 2.1rem 1rem 2.5rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  overflow-y: auto;
+  transform: translateY(10px);
+  transition: opacity 0.32s ease, transform 0.32s ease, visibility 0.32s;
+}
+
+body.persona-mode .persona-stage {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+body.persona-mode .hero,
+body.persona-mode .stats-bar,
+body.persona-mode .case-file {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.persona-header {
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+
+.persona-header h2 {
+  margin: 0;
+  font-family: "Bebas Neue", sans-serif;
+  color: var(--bright-red);
+  font-size: clamp(2rem, 5.4vw, 3.5rem);
+  letter-spacing: 0.08em;
+}
+
+.persona-header p {
+  margin: 0.35rem auto 0;
+  font-size: clamp(0.9rem, 1.6vw, 1.08rem);
+  letter-spacing: 0.05em;
+}
+
+.persona-grid {
+  width: min(96vw, 1440px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.persona-card {
+  position: relative;
+  border: 1px solid rgba(255, 0, 0, 0.25);
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.88), rgba(9, 9, 9, 0.96));
+  border-radius: 10px;
+  min-height: 322px;
+  padding: 0.95rem 0.75rem 0.9rem;
+  cursor: pointer;
+  transform: translateY(10px);
+  opacity: 0;
+  animation: fadeCardIn 0.7s ease forwards, cardBreath 3.8s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 130ms), calc(var(--i) * 130ms + 700ms);
+  transition: transform 0.22s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+}
+
+.persona-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 24px rgba(210, 0, 0, 0.28);
+  border-color: rgba(255, 54, 54, 0.7);
+}
+
+.persona-card.selected {
+  border-color: var(--bright-red);
+  box-shadow: 0 0 26px rgba(255, 0, 0, 0.62), inset 0 0 16px rgba(255, 0, 0, 0.18);
+  animation: selectedPulse 1.35s ease-in-out infinite;
+}
+
+.code-name {
+  margin: 0;
+  text-align: center;
+  font-family: "Bebas Neue", sans-serif;
+  letter-spacing: 0.08em;
+  font-size: clamp(1.25rem, 1.7vw, 1.7rem);
+}
+
+.emoji {
+  text-align: center;
+  font-size: 2.2rem;
+  margin: 0.35rem 0;
+}
+
+.backstory {
+  margin: 0.25rem 0 0.72rem;
+  min-height: 52px;
+  text-align: center;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.rating-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  margin-bottom: 0.35rem;
+  color: #cccccc;
+}
+
+.loyalty-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  background: rgba(20, 20, 20, 0.9);
+  overflow: hidden;
+}
+
+.loyalty-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6f0000, #ff2a2a);
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.65);
+}
+
+.danger {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.82rem;
+}
+
+.danger span {
+  color: var(--bright-red);
+}
+
+.action-area {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.countdown {
+  min-height: 1.2em;
+  margin: 0;
+  color: #ff6a6a;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.confirm-btn {
+  appearance: none;
+  border: 2px solid var(--bright-red);
+  background: rgba(10, 10, 10, 0.86);
+  color: var(--bright-red);
+  font-family: "Courier Prime", monospace;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.3rem;
+  min-width: min(90vw, 420px);
+  cursor: pointer;
+}
+
+.confirm-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.confirm-btn:not(:disabled):hover {
+  box-shadow: 0 0 22px rgba(255, 0, 0, 0.42);
+}
+
+body.transitioning .static-overlay {
+  opacity: 0.55;
+  animation: staticJitter 0.11s steps(2) infinite;
+}
+
+.red-flash-overlay.flash-on {
+  animation: redFlashIn 0.7s ease-out forwards;
+}
+
 @media (max-width: 780px) {
   body {
     overflow-y: auto;
@@ -261,5 +464,20 @@ body {
     flex-direction: row;
     justify-content: center;
     gap: 0.5rem;
+  }
+
+  .persona-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .persona-card {
+    min-height: 295px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .persona-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
