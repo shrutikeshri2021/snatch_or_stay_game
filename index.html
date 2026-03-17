@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZK Snitch or Stay — Interrogation Access</title>
+  <style>
+    html, body { margin: 0; padding: 0; background: #0a0a0a; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+  <div id="particles-bg" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div id="flashOverlay" class="flash-overlay" aria-hidden="true"></div>
+
+  <div class="corner live-status">
+    <span class="live-dot"></span>
+    <span class="live-text">LIVE</span>
+  </div>
+
+  <div class="corner feed-timestamp" id="feedTimestamp">FEED: 00:00:00</div>
+
+  <main class="hero">
+    <p class="classified">CLASSIFIED — LEVEL 5 INTERROGATION</p>
+
+    <div class="title-wrap">
+      <div class="title-glow" aria-hidden="true"></div>
+      <h1 class="main-title glitch" data-text="SNITCH OR STAY">SNITCH OR STAY</h1>
+    </div>
+
+    <p class="subtitle">Two criminals. One choice. Zero mercy.</p>
+
+    <button id="enterBtn" class="enter-btn" type="button">
+      <i class="fa-solid fa-door-open" aria-hidden="true"></i>
+      ENTER THE INTERROGATION ROOM
+    </button>
+  </main>
+
+  <section class="stats-bar" aria-label="Live interrogation stats">
+    <div class="stat-item">
+      <span class="label">CRIMINALS INTERROGATED:</span>
+      <span class="value" data-target="14892" data-format="number">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="label">SNITCHES TODAY:</span>
+      <span class="value" data-target="386" data-format="number">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="label">LOYALTY RATE:</span>
+      <span class="value" data-target="41.7" data-format="percent">0%</span>
+    </div>
+  </section>
+
+  <footer class="case-file">CASE FILE #ZK-2024 — ALL SESSIONS MONITORED</footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+.scanlines {
+  animation: scanlineShift 8s linear infinite;
+}
+
+.classified {
+  animation: classifiedBlink 1.8s steps(2, jump-none) infinite;
+}
+
+.live-dot {
+  animation: liveBlink 1.15s ease-in-out infinite;
+}
+
+.title-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.glitch {
+  animation: glitchSkew 2.8s infinite linear alternate-reverse;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  will-change: transform, clip-path;
+}
+
+.glitch::before {
+  color: rgba(0, 220, 255, 0.85);
+  transform: translate3d(2px, 0, 0);
+  clip-path: polygon(0 2%, 100% 2%, 100% 35%, 0 35%);
+  animation: glitchLayerTop 2.2s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  color: rgba(255, 0, 90, 0.85);
+  transform: translate3d(-2px, 0, 0);
+  clip-path: polygon(0 62%, 100% 62%, 100% 98%, 0 98%);
+  animation: glitchLayerBottom 1.85s infinite linear alternate-reverse;
+}
+
+.flash-overlay.flash-active {
+  animation: fullFlash 0.48s ease-out forwards;
+}
+
+@keyframes scanlineShift {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(0, 8px, 0); }
+}
+
+@keyframes classifiedBlink {
+  0%, 100% { opacity: 1; text-shadow: 0 0 8px rgba(255, 30, 30, 0.5); }
+  45% { opacity: 0.45; }
+  50% { opacity: 0.2; }
+  55% { opacity: 0.95; }
+}
+
+@keyframes liveBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.2; transform: scale(0.78); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.07); }
+}
+
+@keyframes glitchSkew {
+  0%, 100% { transform: skew(0deg); }
+  8% { transform: skew(0.8deg); }
+  9% { transform: skew(-0.8deg); }
+  55% { transform: skew(0.2deg); }
+  56% { transform: skew(-0.25deg); }
+}
+
+@keyframes glitchLayerTop {
+  0%, 100% { transform: translate3d(2px, 0, 0); clip-path: polygon(0 2%, 100% 2%, 100% 35%, 0 35%); }
+  20% { transform: translate3d(-1px, -1px, 0); clip-path: polygon(0 6%, 100% 6%, 100% 30%, 0 30%); }
+  40% { transform: translate3d(3px, 1px, 0); clip-path: polygon(0 1%, 100% 1%, 100% 28%, 0 28%); }
+  60% { transform: translate3d(-2px, 1px, 0); clip-path: polygon(0 10%, 100% 10%, 100% 42%, 0 42%); }
+  80% { transform: translate3d(2px, -1px, 0); clip-path: polygon(0 3%, 100% 3%, 100% 36%, 0 36%); }
+}
+
+@keyframes glitchLayerBottom {
+  0%, 100% { transform: translate3d(-2px, 0, 0); clip-path: polygon(0 62%, 100% 62%, 100% 98%, 0 98%); }
+  20% { transform: translate3d(2px, -1px, 0); clip-path: polygon(0 58%, 100% 58%, 100% 96%, 0 96%); }
+  40% { transform: translate3d(-3px, 1px, 0); clip-path: polygon(0 68%, 100% 68%, 100% 100%, 0 100%); }
+  60% { transform: translate3d(1px, 1px, 0); clip-path: polygon(0 54%, 100% 54%, 100% 90%, 0 90%); }
+  80% { transform: translate3d(-2px, -1px, 0); clip-path: polygon(0 60%, 100% 60%, 100% 94%, 0 94%); }
+}
+
+@keyframes neonFlicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  20%, 24%, 55% {
+    opacity: 0.4;
+    filter: brightness(0.7);
+  }
+  21%, 54% {
+    opacity: 0.9;
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes fullFlash {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  100% { opacity: 0; }
+}

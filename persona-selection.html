@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZK Snitch or Stay — Persona Selection</title>
+  <style>
+    html, body { margin: 0; padding: 0; background: #0a0a0a; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/persona-selection.css" />
+</head>
+<body>
+  <div id="particles-bg" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="static-overlay" aria-hidden="true"></div>
+  <div class="red-flash" id="redFlash" aria-hidden="true"></div>
+
+  <main class="persona-shell">
+    <header class="persona-header">
+      <h1>CHOOSE YOUR IDENTITY, CRIMINAL</h1>
+      <p>Your persona determines your reputation. Choose wisely.</p>
+    </header>
+
+    <section class="persona-grid" aria-label="Persona selection">
+      <article class="persona-card" style="--i:0" data-name="THE MASTERMIND" data-loyalty="20" data-danger="5">
+        <h2 class="code-name">THE MASTERMIND</h2>
+        <div class="emoji">🧠</div>
+        <p class="backstory">You planned every heist.<br />You trust no one.</p>
+        <div class="rating-block">
+          <div class="rating-line">
+            <span>Loyalty Rating</span>
+            <span>20%</span>
+          </div>
+          <div class="loyalty-track"><div class="loyalty-fill" style="width: 20%"></div></div>
+        </div>
+        <div class="danger">Danger Level: <span>☠️☠️☠️☠️☠️</span></div>
+      </article>
+
+      <article class="persona-card" style="--i:1" data-name="THE GETAWAY DRIVER" data-loyalty="40" data-danger="3">
+        <h2 class="code-name">THE GETAWAY DRIVER</h2>
+        <div class="emoji">🚗</div>
+        <p class="backstory">Fast hands, faster exits.<br />Loyalty is a speed bump.</p>
+        <div class="rating-block">
+          <div class="rating-line">
+            <span>Loyalty Rating</span>
+            <span>40%</span>
+          </div>
+          <div class="loyalty-track"><div class="loyalty-fill" style="width: 40%"></div></div>
+        </div>
+        <div class="danger">Danger Level: <span>☠️☠️☠️</span></div>
+      </article>
+
+      <article class="persona-card" style="--i:2" data-name="THE INSIDE MAN" data-loyalty="30" data-danger="4">
+        <h2 class="code-name">THE INSIDE MAN</h2>
+        <div class="emoji">🕵️</div>
+        <p class="backstory">You've played both sides before.<br />Old habit.</p>
+        <div class="rating-block">
+          <div class="rating-line">
+            <span>Loyalty Rating</span>
+            <span>30%</span>
+          </div>
+          <div class="loyalty-track"><div class="loyalty-fill" style="width: 30%"></div></div>
+        </div>
+        <div class="danger">Danger Level: <span>☠️☠️☠️☠️</span></div>
+      </article>
+
+      <article class="persona-card" style="--i:3" data-name="THE HACKER" data-loyalty="50" data-danger="2">
+        <h2 class="code-name">THE HACKER</h2>
+        <div class="emoji">💻</div>
+        <p class="backstory">You already know the outcome.<br />You just won't say.</p>
+        <div class="rating-block">
+          <div class="rating-line">
+            <span>Loyalty Rating</span>
+            <span>50%</span>
+          </div>
+          <div class="loyalty-track"><div class="loyalty-fill" style="width: 50%"></div></div>
+        </div>
+        <div class="danger">Danger Level: <span>☠️☠️</span></div>
+      </article>
+
+      <article class="persona-card" style="--i:4" data-name="THE LOYAL ONE" data-loyalty="90" data-danger="1">
+        <h2 class="code-name">THE LOYAL ONE</h2>
+        <div class="emoji">🤝</div>
+        <p class="backstory">You've never snitched.<br />But everyone has a price.</p>
+        <div class="rating-block">
+          <div class="rating-line">
+            <span>Loyalty Rating</span>
+            <span>90%</span>
+          </div>
+          <div class="loyalty-track"><div class="loyalty-fill" style="width: 90%"></div></div>
+        </div>
+        <div class="danger">Danger Level: <span>☠️</span></div>
+      </article>
+    </section>
+
+    <section class="action-area">
+      <p id="countdownText" class="countdown" aria-live="polite"></p>
+      <button id="confirmBtn" class="confirm-btn" type="button" disabled>
+        <i class="fa-solid fa-fingerprint" aria-hidden="true"></i>
+        ACCEPT THIS IDENTITY
+      </button>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <script src="js/persona-selection.js"></script>
+</body>
+</html>
