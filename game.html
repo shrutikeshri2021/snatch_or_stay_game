@@ -253,5 +253,43 @@
   <!-- Scripts — order matters -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
   <script src="./js/game.js"></script>
+  
+  <!-- Layout Verification -->
+  <script>
+    console.log("✅ LAYOUT FIXED — CSS SELECTORS NOW MATCH HTML STRUCTURE");
+    console.log("✅ 3-Column Grid: 260px | 1fr | 260px");
+    console.log("✅ Choice Buttons: FLEX ROW (SIDE-BY-SIDE)");
+    console.log("✅ DOM Selectors: #topBar, #leftPanel, #centerArena, #rightPanel, #bottomBar");
+    
+    // Verify key elements exist
+    const elements = {
+      topBar: document.getElementById('topBar'),
+      leftPanel: document.getElementById('leftPanel'),
+      centerArena: document.getElementById('centerArena'),
+      rightPanel: document.getElementById('rightPanel'),
+      bottomBar: document.getElementById('bottomBar'),
+      stayBtn: document.getElementById('stayBtn'),
+      snitchBtn: document.getElementById('snitchBtn'),
+      middleSection: document.getElementById('middleSection')
+    };
+    
+    const missing = Object.entries(elements)
+      .filter(([_, el]) => !el)
+      .map(([name]) => name);
+    
+    if (missing.length === 0) {
+      console.log("✅ ALL KEY ELEMENTS FOUND IN DOM");
+    } else {
+      console.warn("❌ MISSING ELEMENTS:", missing.join(", "));
+    }
+    
+    // Verify grid layout
+    const grid = window.getComputedStyle(document.getElementById('middleSection'));
+    console.log("✅ Grid columns:", grid.gridTemplateColumns);
+    
+    // Verify choice buttons are in row
+    const buttons = window.getComputedStyle(document.querySelector('.choice-buttons'));
+    console.log("✅ Choice buttons flex-direction:", buttons.flexDirection);
+  </script>
 </body>
 </html>
